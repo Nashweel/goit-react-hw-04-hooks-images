@@ -1,20 +1,33 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 import s from "./Searchbar.module.css";
 
 export default function Searchbar({ changeQuery }) {
-  const [value, setValue] = useState("");
+  const [query, setQuery] = useState("");
 
   const handleNameChange = (event) =>
-    setValue(event.currentTarget.value.toLowerCase());
+    setQuery(event.currentTarget.value.toLowerCase());
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (value.trim() === "") {
+    if (query.trim() === "") {
+      toast.warning(
+        "You have not entered anything in the search bar, please enter a search term",
+        {
+          position: "top-center",
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
       return;
     }
 
-    changeQuery(value);
-    setValue("");
+    changeQuery(query);
+    setQuery("");
   };
 
   return (
@@ -29,7 +42,7 @@ export default function Searchbar({ changeQuery }) {
           type="text"
           autoComplete="off"
           autoFocus
-          value={value}
+          value={query}
           placeholder="Search images and photos"
           onChange={handleNameChange}
         />
@@ -37,3 +50,7 @@ export default function Searchbar({ changeQuery }) {
     </header>
   );
 }
+
+Searchbar.propTypes = {
+  changeQuery: PropTypes.func.isRequired,
+};
